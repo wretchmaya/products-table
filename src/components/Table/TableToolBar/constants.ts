@@ -1,5 +1,7 @@
 export const CLASSES = {
-	ADD_PRODUCT_BUTTON: 'add-product__button'
+	TOOLBAR: 'toolbar',
+	ADD_PRODUCT_BUTTON: 'toolbar__add-product-button',
+	SEARCH: 'toolbar__search'
 };
 export const TEXT = {
 	SELECTED: 'selected',

@@ -29,7 +29,7 @@ export const EnhancedTableToolbar = ({
 }: EnhancedTableToolbarProps): JSX.Element => {
     const dispatch = useAppDispatch();
     return (
-        <Toolbar>
+        <Toolbar className={CLASSES.TOOLBAR}>
             {numSelected > 0 ? (
                 <Typography>
                     {numSelected} {TEXT.SELECTED}
@@ -48,7 +48,12 @@ export const EnhancedTableToolbar = ({
             ) : (
                 <>
                     <Tooltip title={TEXT.ADD_NEW_PRODUCT}>
-                        <Button className={CLASSES.ADD_PRODUCT_BUTTON}>
+                        <Button
+                            sx={{ margin: '0 15px 0 auto' }}
+                            className={CLASSES.ADD_PRODUCT_BUTTON}
+                            variant="outlined"
+                            color="inherit"
+                        >
                             <Link href={ROUTES.ADD_PRODUCT}>{TEXT.ADD_NEW_PRODUCT}</Link>
                         </Button>
                     </Tooltip>
@@ -58,6 +63,7 @@ export const EnhancedTableToolbar = ({
                         placeholder={searchPlaceHolder}
                         value={searchValue}
                         onChange={onSearch}
+                        className={CLASSES.SEARCH}
                     />
                 </>
             )}
