@@ -11,6 +11,8 @@ import { ChangeEvent } from 'react';
 import Link from 'next/link';
 import { useAppDispatch } from '@/store/hooks';
 import { deleteProductRequest } from '@/store/api';
+import { TEXT, CLASSES, searchPlaceHolder } from './constants';
+import { ROUTES } from '@/constants/routes';
 
 interface EnhancedTableToolbarProps {
     numSelected: number;
@@ -29,16 +31,14 @@ export const EnhancedTableToolbar = ({
     return (
         <Toolbar>
             {numSelected > 0 ? (
-                <Typography color="inherit" variant="subtitle1" component="div">
-                    {numSelected} selected
+                <Typography>
+                    {numSelected} {TEXT.SELECTED}
                 </Typography>
             ) : (
-                <Typography variant="h6" id="tableTitle" component="div">
-                    Products
-                </Typography>
+                <Typography variant="h6">{TEXT.PRODUCTS}</Typography>
             )}
             {numSelected > 0 ? (
-                <Tooltip title="Delete">
+                <Tooltip title={TEXT.DELETE}>
                     <IconButton
                         onClick={() => dispatch(deleteProductRequest(selectedId))}
                     >
@@ -47,20 +47,15 @@ export const EnhancedTableToolbar = ({
                 </Tooltip>
             ) : (
                 <>
-                    <Tooltip title="Add New Product">
-                        <Button sx={{ margin: '0 auto' }}>
-                            <Link
-                                href="/add-product"
-                                style={{ textDecoration: 'none' }}
-                            >
-                                Add new product
-                            </Link>
+                    <Tooltip title={TEXT.ADD_NEW_PRODUCT}>
+                        <Button className={CLASSES.ADD_PRODUCT_BUTTON}>
+                            <Link href={ROUTES.ADD_PRODUCT}>{TEXT.ADD_NEW_PRODUCT}</Link>
                         </Button>
                     </Tooltip>
                     <TextField
                         variant="outlined"
                         size="small"
-                        placeholder="Search..."
+                        placeholder={searchPlaceHolder}
                         value={searchValue}
                         onChange={onSearch}
                     />

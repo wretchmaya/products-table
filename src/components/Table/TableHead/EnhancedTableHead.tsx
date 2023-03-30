@@ -1,16 +1,6 @@
 import { TableHead, TableRow, TableCell, Checkbox, TableSortLabel } from '@mui/material';
 import { ChangeEvent } from 'react';
-
-const headCells = [
-    { id: 'image', label: 'Image' },
-    { id: 'id', label: 'ID' },
-    { id: 'title', label: 'Title' },
-    { id: 'description', label: 'Description' },
-    { id: 'price', label: 'Price' },
-    { id: 'rating', label: 'Rating' },
-    { id: 'stock', label: 'Stock' },
-    { id: 'category', label: 'Category' },
-];
+import { image, headCells } from './constants';
 
 export type Order = 'asc' | 'desc';
 interface EnhancedTableHeadProps {
@@ -35,7 +25,7 @@ export const EnhancedTableHead = ({
                     <Checkbox color="primary" onChange={onSelectAllClick} />
                 </TableCell>
                 {headCells.map(headCell => {
-                    if (headCell.id === 'image') {
+                    if (headCell.id === image) {
                         return <TableCell key={headCell.id}>{headCell.label}</TableCell>;
                     }
                     return (

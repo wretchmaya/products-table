@@ -13,6 +13,7 @@ export interface Product {
 	brand?: string,
 	category: string,
 	thumbnail?: string,
+	image?: string
 };
 
 export interface Products {

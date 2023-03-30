@@ -1,7 +1,7 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState, useMemo } from 'react';
 import { fetchProductsRequest } from '@/store/api';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { selectProducts, selectLoadingStatus } from '@/store/rootReducer';
+import { selectProducts, selectLoadingStatus, Product } from '@/store/rootReducer';
 import {
     TableContainer,
     Paper,
@@ -10,33 +10,13 @@ import {
     TableRow,
     TableCell,
     Checkbox,
-    styled,
-    tableCellClasses,
 } from '@mui/material';
 import { CircularProgress } from '@mui/joy';
 import Image from 'mui-image';
 import { EnhancedTableToolbar } from './TableToolBar/EnhancedTableToolBar';
 import { EnhancedTableHead, Order } from './TableHead/EnhancedTableHead';
 import { getComparator, stableSort } from './helpers/sortingActions';
-
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-        backgroundColor: theme.palette.common.black,
-        color: theme.palette.common.white,
-    },
-    [`&.${tableCellClasses.body}`]: {
-        fontSize: 14,
-    },
-}));
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    '&:nth-of-type(odd)': {
-        backgroundColor: theme.palette.action.hover,
-    },
-    '&:last-child td, &:last-child th': {
-        border: 0,
-    },
-}));
+import { CLASSES, image } from './constants';
 
 export const EnhencedTable = (): JSX.Element => {
     const dispatch = useAppDispatch();
@@ -50,11 +30,11 @@ export const EnhencedTable = (): JSX.Element => {
 
     useEffect(() => {
         dispatch(fetchProductsRequest());
-    }, []);
+    }, [dispatch]);
 
     useEffect(() => {
         setSelected([]);
-    }, [products]);
+    }, [isLoading]);
 
     const handleRequestSort = (property: string) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -102,17 +82,30 @@ export const EnhencedTable = (): JSX.Element => {
         setSelected([]);
     };
 
+    const generateTableCellValues = (row: Product) => {
+        return Object.keys(row).map((value: string, index: number) => {
+            const key = value as keyof Product;
+            if (value === image) {
+                return (
+                    <TableCell key={index}>
+                        <Image
+                            src={row.image || ''}
+                            showLoading={true}
+                            errorIcon={true}
+                            alt={row.title}
+                            className={CLASSES.PRODUCT__IMAGE}
+                        />
+                    </TableCell>
+                );
+            }
+            return <TableCell key={index}>{row[key]}</TableCell>;
+        });
+    };
+
     return (
         <>
             {isLoading ? (
-                <CircularProgress
-                    size="lg"
-                    sx={{
-                        position: 'absolute',
-                        top: '45%',
-                        left: '48%',
-                    }}
-                />
+                <CircularProgress className={CLASSES.SPINNER} size="lg" />
             ) : (
                 <TableContainer component={Paper}>
                     <EnhancedTableToolbar
@@ -130,44 +123,21 @@ export const EnhencedTable = (): JSX.Element => {
                         />
                         <TableBody>
                             {stableSort(filteredRows, getComparator(order, orderBy)).map(
-                                (row: any) => {
+                                (row: Product) => {
                                     const isItemSelected = isSelected(row.id);
                                     return (
-                                        <StyledTableRow
+                                        <TableRow
                                             key={row.id}
                                             onClick={() => handleClick(row.id)}
                                         >
-                                            <StyledTableCell padding="checkbox">
+                                            <TableCell padding="checkbox">
                                                 <Checkbox
                                                     color="primary"
                                                     checked={isItemSelected}
                                                 />
-                                            </StyledTableCell>
-                                            {Object.keys(row).map(
-                                                (value: any, index: number) => {
-                                                    if (value === 'image') {
-                                                        return (
-                                                            <StyledTableCell key={index}>
-                                                                <Image
-                                                                    height="125px"
-                                                                    width="145px"
-                                                                    fit="contain"
-                                                                    src={row.image}
-                                                                    showLoading={true}
-                                                                    errorIcon={true}
-                                                                    alt={row.title}
-                                                                />
-                                                            </StyledTableCell>
-                                                        );
-                                                    }
-                                                    return (
-                                                        <StyledTableCell key={index}>
-                                                            {row[value]}
-                                                        </StyledTableCell>
-                                                    );
-                                                }
-                                            )}
-                                        </StyledTableRow>
+                                            </TableCell>
+                                            {generateTableCellValues(row)}
+                                        </TableRow>
                                     );
                                 }
                             )}

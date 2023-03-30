@@ -1,27 +1,14 @@
 import React from 'react';
 import { useFormik } from 'formik';
-import * as yup from 'yup';
-import { Button, FormGroup, MenuItem, TextField } from '@mui/material';
+import { Button, MenuItem, TextField, Box } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { createProductRequest } from '@/store/api';
 import { useRouter } from 'next/router';
 import { CircularProgress } from '@mui/joy';
 import { selectLoadingStatus } from '@/store/rootReducer';
-
-const validationSchema = yup.object({
-    title: yup.string().required('Title required'),
-    description: yup.string().required('Description is required'),
-    price: yup
-        .number()
-        .required('Price is required')
-        .min(1),
-    rating: yup.number().required('Rating is required'),
-    stock: yup
-        .number()
-        .required('Stock is required')
-        .min(1),
-    category: yup.string().required('Category is required'),
-});
+import { validationSchema } from './validationSchema';
+import { CLASSES, LABELS, TEXT } from './constants';
+import { ROUTES } from '@/constants/routes';
 
 export const CreateProductForm = () => {
     const dispatch = useAppDispatch();
@@ -38,7 +25,7 @@ export const CreateProductForm = () => {
         },
         validationSchema: validationSchema,
         onSubmit: values => {
-            router.push('/');
+            router.push(ROUTES.DEFAULT);
             dispatch(createProductRequest(values));
         },
     });
@@ -46,43 +33,21 @@ export const CreateProductForm = () => {
     return (
         <div>
             {isLoading ? (
-                <CircularProgress
-                    sx={{
-                        position: 'absolute',
-                        top: '45%',
-                        left: '48%',
-                    }}
-                />
+                <CircularProgress className={CLASSES.SPINNER} />
             ) : (
-                <form onSubmit={formik.handleSubmit}>
-                    <FormGroup
-                        sx={{
-                            padding: 2,
-                            margin: '10% auto',
-                            width: '40%',
-                            borderRadius: 2,
-                            border: '1px solid',
-                            borderColor: 'primary.main',
-                        }}
-                    >
+                <form onSubmit={formik.handleSubmit} className={CLASSES.FORM_UI}>
+                    <Box component="div" className={CLASSES.FORM_FIELDS_WRAPPER}>
                         <TextField
                             fullWidth
-                            id="title"
-                            name="title"
-                            label="title"
-                            value={formik.values.title}
-                            onChange={formik.handleChange}
+                            label={LABELS.TITLE}
                             error={formik.touched.title && Boolean(formik.errors.title)}
                             helperText={formik.touched.title && formik.errors.title}
                             margin="normal"
+                            {...formik.getFieldProps(LABELS.TITLE)}
                         />
                         <TextField
                             fullWidth
-                            id="description"
-                            name="description"
-                            label="description"
-                            value={formik.values.description}
-                            onChange={formik.handleChange}
+                            label={LABELS.DESCRIPTION}
                             error={
                                 formik.touched.description &&
                                 Boolean(formik.errors.description)
@@ -91,31 +56,26 @@ export const CreateProductForm = () => {
                                 formik.touched.description && formik.errors.description
                             }
                             margin="normal"
+                            {...formik.getFieldProps(LABELS.DESCRIPTION)}
                         />
                         <TextField
                             fullWidth
-                            id="price"
-                            name="price"
                             type="number"
-                            label="price"
-                            value={formik.values.price}
-                            onChange={formik.handleChange}
+                            label={LABELS.PRICE}
                             error={formik.touched.price && Boolean(formik.errors.price)}
                             helperText={formik.touched.price && formik.errors.price}
                             margin="normal"
+                            {...formik.getFieldProps(LABELS.PRICE)}
                         />
                         <TextField
                             select
                             fullWidth
-                            id="rating"
-                            name="rating"
-                            label="rating"
+                            label={LABELS.RATING}
                             type="number"
-                            value={formik.values.rating}
-                            onChange={formik.handleChange}
                             error={formik.touched.rating && Boolean(formik.errors.rating)}
                             helperText={formik.touched.rating && formik.errors.rating}
                             margin="normal"
+                            {...formik.getFieldProps(LABELS.RATING)}
                         >
                             {Array.from(Array(10).keys()).map(number => (
                                 <MenuItem key={number} value={number + 1}>
@@ -125,29 +85,23 @@ export const CreateProductForm = () => {
                         </TextField>
                         <TextField
                             fullWidth
-                            id="stock"
-                            name="stock"
-                            label="stock"
+                            label={LABELS.STOCK}
                             type="number"
-                            value={formik.values.stock}
-                            onChange={formik.handleChange}
                             error={formik.touched.stock && Boolean(formik.errors.stock)}
                             helperText={formik.touched.stock && formik.errors.stock}
                             margin="normal"
+                            {...formik.getFieldProps(LABELS.STOCK)}
                         />
                         <TextField
                             fullWidth
-                            id="category"
-                            name="category"
-                            label="category"
+                            label={LABELS.CATEGORY}
                             type="text"
-                            value={formik.values.category}
-                            onChange={formik.handleChange}
                             error={
                                 formik.touched.category && Boolean(formik.errors.category)
                             }
                             helperText={formik.touched.category && formik.errors.category}
                             margin="normal"
+                            {...formik.getFieldProps(LABELS.CATEGORY)}
                         />
                         <Button
                             color="primary"
@@ -155,9 +109,9 @@ export const CreateProductForm = () => {
                             fullWidth
                             type="submit"
                         >
-                            Submit
+                            {TEXT.CREATE}
                         </Button>
-                    </FormGroup>
+                    </Box>
                 </form>
             )}
         </div>
