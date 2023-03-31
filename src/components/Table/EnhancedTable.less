@@ -2,7 +2,6 @@ tbody {
     td,
     th {
         padding: 10px;
-        border-radius: 5px;
     }
 
     td {
@@ -17,10 +16,19 @@ tbody {
         background-color: #f2f2f2;
         cursor: pointer;
     }
+
+    .description {
+        max-width: 650px;
+    }
+
     .product__image {
-        /* to override default lib styles */
+        /* to override default mu-image lib styles */
         height: 125px !important;
         width: 145px !important;
         object-fit: contain !important;
+    }
+    .product-details__button {
+        color: black;
+        border: 1px solid gray;
     }
 }

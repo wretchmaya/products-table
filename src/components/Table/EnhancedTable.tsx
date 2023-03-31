@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState, useMemo } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { fetchProductsRequest } from '@/store/api';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { selectProducts, selectLoadingStatus, Product } from '@/store/rootReducer';
@@ -10,16 +10,21 @@ import {
     TableRow,
     TableCell,
     Checkbox,
+    Button,
 } from '@mui/material';
 import { CircularProgress } from '@mui/joy';
 import Image from 'mui-image';
 import { EnhancedTableToolbar } from './TableToolBar/EnhancedTableToolBar';
 import { EnhancedTableHead, Order } from './TableHead/EnhancedTableHead';
 import { getComparator, stableSort } from './helpers/sortingActions';
-import { CLASSES, image } from './constants';
+import { CLASSES, TABLECELL_VALUES, TEXT } from './constants';
+import { useRouter } from 'next/router';
+import { ROUTES } from '@/constants/routes';
+import Link from 'next/link';
 
 export const EnhencedTable = (): JSX.Element => {
     const dispatch = useAppDispatch();
+    const router = useRouter();
     const { products } = useAppSelector(selectProducts);
     const isLoading = useAppSelector(selectLoadingStatus);
 
@@ -82,10 +87,14 @@ export const EnhencedTable = (): JSX.Element => {
         setSelected([]);
     };
 
-    const generateTableCellValues = (row: Product) => {
+    const handleViewDetails = (id: number) => {
+        router.push(`${ROUTES.PRODUCT_DETAILS}${id}`);
+    };
+
+    const generateTableRowValues = (row: Product) => {
         return Object.keys(row).map((value: string, index: number) => {
             const key = value as keyof Product;
-            if (value === image) {
+            if (value === TABLECELL_VALUES.IMAGE) {
                 return (
                     <TableCell key={index}>
                         <Image
@@ -93,12 +102,16 @@ export const EnhencedTable = (): JSX.Element => {
                             showLoading={true}
                             errorIcon={true}
                             alt={row.title}
-                            className={CLASSES.PRODUCT__IMAGE}
+                            className={CLASSES.PRODUCT_IMAGE}
                         />
                     </TableCell>
                 );
             }
-            return <TableCell key={index}>{row[key]}</TableCell>;
+            return (
+                <TableCell key={index} className={`${key}`}>
+                    {row[key]}
+                </TableCell>
+            );
         });
     };
 
@@ -136,7 +149,22 @@ export const EnhencedTable = (): JSX.Element => {
                                                     checked={isItemSelected}
                                                 />
                                             </TableCell>
-                                            {generateTableCellValues(row)}
+
+                                            {generateTableRowValues(row)}
+
+                                            <TableCell>
+                                                <Button
+                                                    onClick={e => {
+                                                        e.stopPropagation();
+                                                        handleViewDetails(row.id);
+                                                    }}
+                                                    className={
+                                                        CLASSES.PRODUCT_DETAILS_BUTTON
+                                                    }
+                                                >
+                                                    {TEXT.PRODUCT_DETAILS}
+                                                </Button>
+                                            </TableCell>
                                         </TableRow>
                                     );
                                 }

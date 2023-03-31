@@ -1,5 +1,14 @@
 export const CLASSES = {
 	SPINNER: 'spinner-ui',
-	PRODUCT__IMAGE: 'product__image'
+	PRODUCT_IMAGE: 'product__image',
+	PRODUCT_DETAILS_BUTTON: 'product-details__button'
 };
-export const image = 'image';
+
+export const TABLECELL_VALUES = {
+	CATEGORY: 'category',
+	IMAGE: 'image'
+}
+
+export const TEXT = {
+	PRODUCT_DETAILS: 'Details',
+};

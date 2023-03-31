@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from './store';
-import { fetchProductsRequest, deleteProductRequest, createProductRequest } from './api';
+import { fetchProductsRequest, deleteProductRequest, createProductRequest, getProductById } from './api';
 
 export interface Product {
 	id: number,
@@ -13,17 +13,32 @@ export interface Product {
 	brand?: string,
 	category: string,
 	thumbnail?: string,
-	image?: string
+	image?: string,
+	images?: string[]
 };
-
-export interface Products {
+interface Products {
 	products: Product[];
 	isLoading: boolean;
+	currentProduct: Product
 };
 
 const initialState: Products = {
 	products: [],
 	isLoading: false,
+	currentProduct: {
+		id: 0,
+		title: '',
+		description: '',
+		price: 0,
+		discountPercentage: 0,
+		rating: 0,
+		stock: 0,
+		brand: '',
+		category: '',
+		thumbnail: '',
+		image: '',
+		images: []
+	}
 };
 
 export const productsSlice = createSlice({
@@ -54,11 +69,19 @@ export const productsSlice = createSlice({
 			state.products = [...state.products, action.payload]
 			state.isLoading = false;
 		})
+		builder.addCase(getProductById.pending, (state, action) => {
+			state.isLoading = true;
+		})
+		builder.addCase(getProductById.fulfilled, (state, action) => {
+			state.currentProduct = action.payload;
+			state.isLoading = false;
+		})
 	},
 });
 
 
 export const selectProducts = (state: RootState) => state.products;
 export const selectLoadingStatus = (state: RootState) => state.products.isLoading;
+export const selectCurrentProduct = (state: RootState) => state.products.currentProduct;
 
 export default productsSlice.reducer;

@@ -1,4 +1,5 @@
 export const ROUTES = {
-	DEFAULT: '/',
-	ADD_PRODUCT: '/add-product'
+	DEFAULT: '/products',
+	ADD_PRODUCT: '/products/add-product',
+	PRODUCT_DETAILS: '/products/'
 }

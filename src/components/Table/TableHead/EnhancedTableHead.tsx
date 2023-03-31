@@ -18,31 +18,35 @@ export const EnhancedTableHead = ({
 }: EnhancedTableHeadProps): JSX.Element => {
     const createSortHandler = (property: string) => onRequestSort(property);
 
+    const generateHeadCells = () => {
+        return headCells.map(headCell => {
+            if (headCell.id === image) {
+                return <TableCell key={headCell.id}>{headCell.label}</TableCell>;
+            }
+            return (
+                <TableCell
+                    key={headCell.id}
+                    sortDirection={orderBy === headCell.id ? order : false}
+                >
+                    <TableSortLabel
+                        active={orderBy === headCell.id}
+                        direction={orderBy === headCell.id ? order : 'asc'}
+                        onClick={() => createSortHandler(headCell.id)}
+                    >
+                        {headCell.label}
+                    </TableSortLabel>
+                </TableCell>
+            );
+        });
+    };
     return (
         <TableHead>
             <TableRow>
                 <TableCell padding="checkbox">
                     <Checkbox color="primary" onChange={onSelectAllClick} />
                 </TableCell>
-                {headCells.map(headCell => {
-                    if (headCell.id === image) {
-                        return <TableCell key={headCell.id}>{headCell.label}</TableCell>;
-                    }
-                    return (
-                        <TableCell
-                            key={headCell.id}
-                            sortDirection={orderBy === headCell.id ? order : false}
-                        >
-                            <TableSortLabel
-                                active={orderBy === headCell.id}
-                                direction={orderBy === headCell.id ? order : 'asc'}
-                                onClick={() => createSortHandler(headCell.id)}
-                            >
-                                {headCell.label}
-                            </TableSortLabel>
-                        </TableCell>
-                    );
-                })}
+                {generateHeadCells()}
+                <TableCell></TableCell>
             </TableRow>
         </TableHead>
     );
