@@ -20,7 +20,6 @@ import { getComparator, stableSort } from './helpers/sortingActions';
 import { CLASSES, TABLECELL_VALUES, TEXT } from './constants';
 import { useRouter } from 'next/router';
 import { ROUTES } from '@/constants/routes';
-import Link from 'next/link';
 
 export const EnhencedTable = (): JSX.Element => {
     const dispatch = useAppDispatch();
@@ -35,7 +34,7 @@ export const EnhencedTable = (): JSX.Element => {
 
     useEffect(() => {
         dispatch(fetchProductsRequest());
-    }, [dispatch]);
+    }, []);
 
     useEffect(() => {
         setSelected([]);

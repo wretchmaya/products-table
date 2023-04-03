@@ -53,15 +53,5 @@ export const getProductById = createAsyncThunk(
 	async (id: string | undefined | string[]) => {
 		const { data } = await axios.get(`https://dummyjson.com/products/${id}`)
 		return data
-		// return {
-		// 	image: '',
-		// 	id: data.id,
-		// 	title: data.title,
-		// 	description: data.description,
-		// 	price: data.price,
-		// 	rating: data.rating,
-		// 	stock: data.stock,
-		// 	category: data.category,
-		// }
 	}
 );
