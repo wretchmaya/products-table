@@ -6,7 +6,7 @@
 
     &__content_wrapper {
         width: 800px;
-        height: 600px;
+        min-height: 600px;
         margin: auto;
     }
     &__description {
@@ -18,9 +18,14 @@
         }
     }
 
-    &__go-back-button {
+    &__go-back-button,
+    &__read-reviews-button {
         a {
             text-decoration: none;
         }
+    }
+
+    &__read-reviews-button {
+        margin-left: auto !important;
     }
 }

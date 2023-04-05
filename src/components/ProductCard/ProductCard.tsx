@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import React, { useEffect } from 'react';
-import { getProductById } from '@/store/api';
+import { getProductByIdRequest } from '@/store/api';
 import { useRouter } from 'next/router';
 import { selectCurrentProduct, selectLoadingStatus } from '@/store/rootReducer';
 import { Button, Card, CardActions, CardContent, Typography } from '@mui/material';
@@ -15,14 +15,15 @@ export const ProductDetailsCard = () => {
     const currentProduct = useAppSelector(selectCurrentProduct);
     const isLoading = useAppSelector(selectLoadingStatus);
     const router = useRouter();
-    const id = router.query.productId;
+    const { productId } = router.query;
+    const id = Array.isArray(productId) ? productId[0] : productId || 'undefined';
 
     useEffect(() => {
-        if (!id) {
+        if (!productId) {
             return;
         }
-        dispatch(getProductById(id));
-    }, [id]);
+        dispatch(getProductByIdRequest(productId));
+    }, [productId]);
 
     return (
         <div className={CLASSES.PRODUCT_CARD}>
@@ -67,6 +68,11 @@ export const ProductDetailsCard = () => {
                     <CardActions>
                         <Button className={CLASSES.PRODUCT_CARD__GO_BACK_BUTTON}>
                             <Link href={ROUTES.DEFAULT}>Go Back</Link>
+                        </Button>
+                        <Button className={CLASSES.PRODUCT_CARD__READ_REVIEWS_BUTTON}>
+                            <Link href={ROUTES.PRODUCT_REVIEWS.replace(':id', id)}>
+                                Read Reviews
+                            </Link>
                         </Button>
                     </CardActions>
                 </Card>

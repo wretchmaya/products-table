@@ -6,8 +6,8 @@ import { Product } from './rootReducer';
 export const fetchProductsRequest = createAsyncThunk(
 	'products/fetchProducts',
 	async () => {
-		const response = await axios.get('https://dummyjson.com/products?limit=11');
-		return response.data.products.map((item: Product) => ({
+		const { data } = await axios.get('https://dummyjson.com/products?limit=11');
+		return data.products.map((item: Product) => ({
 			image: item.thumbnail,
 			id: item.id,
 			title: item.title,
@@ -16,7 +16,7 @@ export const fetchProductsRequest = createAsyncThunk(
 			rating: item.rating,
 			stock: item.stock,
 			category: item.category,
-		}))
+		}));
 	}
 );
 
@@ -25,7 +25,7 @@ export const deleteProductRequest = createAsyncThunk(
 	async (ids: Array<number>) => {
 		const promises = ids.map(async (id: number) => {
 			return await axios.delete(`https://dummyjson.com/products/${id}`);
-		})
+		});
 		const results = await Promise.all(promises);
 		return results.map(prop => prop.data.id);
 	}
@@ -34,7 +34,7 @@ export const deleteProductRequest = createAsyncThunk(
 export const createProductRequest = createAsyncThunk(
 	'products/createProduct',
 	async (newProduct: object) => {
-		const { data } = await axios.post('https://dummyjson.com/products/add', newProduct)
+		const { data } = await axios.post('https://dummyjson.com/products/add', newProduct);
 		return {
 			image: '',
 			id: data.id,
@@ -44,14 +44,23 @@ export const createProductRequest = createAsyncThunk(
 			rating: data.rating,
 			stock: data.stock,
 			category: data.category,
-		}
+		};
 	}
 );
 
-export const getProductById = createAsyncThunk(
+export const getProductByIdRequest = createAsyncThunk(
 	'products/getProductById',
-	async (id: string | undefined | string[]) => {
-		const { data } = await axios.get(`https://dummyjson.com/products/${id}`)
-		return data
+	async (id: string | string[]) => {
+		const { data } = await axios.get(`https://dummyjson.com/products/${id}`);
+		return data;
 	}
 );
+
+export const getProductReviewsByIdRequest = createAsyncThunk(
+	'products/getProductReviewsByIdRequest',
+	async (id: string | string[]) => {
+		const { data } = await axios.get<any>(`https://jsonplaceholder.typicode.com/comments?postId=${id}`)
+		return data;
+	}
+);
+

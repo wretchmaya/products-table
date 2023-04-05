@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 import { CircularProgress } from '@mui/joy';
 import Image from 'mui-image';
+// import Image from 'next/image';
 import { EnhancedTableToolbar } from './TableToolBar/EnhancedTableToolBar';
 import { EnhancedTableHead, Order } from './TableHead/EnhancedTableHead';
 import { getComparator, stableSort } from './helpers/sortingActions';
@@ -86,8 +87,8 @@ export const EnhencedTable = (): JSX.Element => {
         setSelected([]);
     };
 
-    const handleViewDetails = (id: number) => {
-        router.push(`${ROUTES.PRODUCT_DETAILS}${id}`);
+    const handleViewDetails = (id: string) => {
+        router.push(ROUTES.PRODUCT_DETAILS.replace(':id', id));
     };
 
     const generateTableRowValues = (row: Product) => {
@@ -103,6 +104,13 @@ export const EnhencedTable = (): JSX.Element => {
                             alt={row.title}
                             className={CLASSES.PRODUCT_IMAGE}
                         />
+                        {/* <Image
+                            width={300}
+                            height={150}
+                            src={row.image || ''}
+                            alt={row.title}
+                            className={CLASSES.PRODUCT_IMAGE}
+                        /> */}
                     </TableCell>
                 );
             }
@@ -155,7 +163,9 @@ export const EnhencedTable = (): JSX.Element => {
                                                 <Button
                                                     onClick={e => {
                                                         e.stopPropagation();
-                                                        handleViewDetails(row.id);
+                                                        handleViewDetails(
+                                                            row.id.toString()
+                                                        );
                                                     }}
                                                     className={
                                                         CLASSES.PRODUCT_DETAILS_BUTTON
